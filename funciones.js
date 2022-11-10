@@ -1,6 +1,6 @@
 //Leer una ruta 
 const fs = require('fs');
-const path = require("path");
+const path = require('path');
 // const resolve = require('resolve')
 
 const ruta = process.argv[2]; //módulo que permite capturar argumentos a través de la línea de comandos y se guarda como un array.
@@ -10,12 +10,14 @@ const ruta = process.argv[2]; //módulo que permite capturar argumentos a travé
 //Comprobando si exite un path
 function existePath(path) {
   const pathExiste = fs.existsSync(path);
-  if (!pathExiste) {
-    console.error("la ruta no existe");
-    return;
+  if (pathExiste) {
+
+    return true;
+  } else {
+    console.error("La ruta no existe");
   }
 }
-console.log(existePath(path));
+
 
 //evaluarRuta= evaluando la ruta, si es absoluta o relativa
 const rutAbsoluta = (mypath) => {
@@ -27,7 +29,7 @@ const rutAbsoluta = (mypath) => {
   const convRuta = mypath;
   return convRuta;
 }
-console.log(rutAbsoluta(ruta));
+// console.log(rutAbsoluta(ruta));
 // Buscando archivos .md
 const buscarRutasMds = (ruta) => {
   let arrayMds = [];
@@ -40,49 +42,69 @@ const buscarRutasMds = (ruta) => {
     let subelemtos = [];
     elementos.forEach((elemento) => {
       const filtradoArchivo = path.join(ruta, elemento);
-      console.log(filtradoArchivo);
+      // console.log(filtradoArchivo);
       if (fs.statSync(filtradoArchivo).isDirectory()) {
         subelemtos = subelemtos.concat(buscarRutasMds(filtradoArchivo));
-        console.log("estos es subelemento", subelemtos);
+        // console.log("Estos son subelementos", subelemtos);
       }
     })
     const archivoRuta = elementos
       .filter((elemento) => {
         const filtradoArchivo = path.join(ruta, elemento);
         const Archivomd =
-          fs.statSync(filtradoArchivo).isFile() &&
-          path.extname(filtradoArchivo) === ".md";
-        console.log("filtrado", filtradoArchivo, Archivomd);
+          fs.statSync(filtradoArchivo).isFile() && path.extname(filtradoArchivo) === ".md";
+        // console.log("filtrado", filtradoArchivo, Archivomd);
         return Archivomd;
       })
       .map((elemento) => {
         return path.join(ruta, elemento);
       });
-    //console.log('ver los elementos del directorio: ', archivoRuta);
+    // console.log('ver los elementos del directorio: ', archivoRuta);
     return archivoRuta.concat(subelemtos);
   }
-  console.log(arrayMds);
+
   return arrayMds;
+
 };
-console.log(
-  "ver los elementos del directorio: ",
-  buscarRutasMds(rutAbsoluta(ruta))
-);
+// console.log(buscarRutasMds(rutAbsoluta(ruta)));
+
+// Leer los archivos .md
+function leerArchivo(archivoMD) {
+  return new Promise ((resolve, reject)=>{
+    fs.readFile(archivoMD, 'utf-8', (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+// leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md').then(res=> console.log('la data es::::', res))
+
+// console.log('ver sin en then: ', leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md'))
+
+function leerTodosArchivos (arrayMds) {
+  let arrPromesas = []
+  arrPromesas = arrayMds.map((archivoMD)=>{
+      return leerArchivo(archivoMD)
+  })
+
+  return Promise.all(arrPromesas).then(res=>res)
+}
+leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response=>console.log('veeeeer: ', response))
 
 
 
+  // fs.readFile(arrayMds, "utf8",
+  //   (err, data) => {
+  //     if (err) {
+  //       console.error(err);
+  //       return;
+  //     }
+  //     // console.log(data);
+  //   }
+  // );
 
 
-
-
-// fs.readFile(
-//   "C:/Users/LABORATORIA/Desktop/Proyectos/Proyecto 4/BOG005-md-links/funciones.js",
-//   "utf8",
-//   (err, data) => {
-//     if (err) {
-//       console.error(err);
-//       return;
-//     }
-//     console.log(data);
-//   }
-// );
+// console.log("Probando", existePath(ruta));
