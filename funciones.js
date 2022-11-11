@@ -1,6 +1,8 @@
 //Leer una ruta 
 const fs = require('fs');
 const path = require('path');
+const marked = require('marked');
+const axios = require('axios');
 // const resolve = require('resolve')
 
 const ruta = process.argv[2]; //módulo que permite capturar argumentos a través de la línea de comandos y se guarda como un array.
@@ -70,41 +72,46 @@ const buscarRutasMds = (ruta) => {
 
 // Leer los archivos .md
 function leerArchivo(archivoMD) {
-  return new Promise ((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
+    let arrayLinks = []
     fs.readFile(archivoMD, 'utf-8', (err, data) => {
       if (err) {
-        console.log(err);
-      } else {
-        resolve(data)
+        resolve(err);
       }
+      
+      // Extraer links 
+
+      const renderer = new marked.Renderer()
+      renderer.link = function (href, file, text) {
+        const linkPropiedades = {
+          'href': href,
+          'text': text.split('').slice(0, 50).join(''),
+          'file': archivoMD
+        }
+
+        if (linkPropiedades.href.includes('http')) {
+          arrayLinks.push(linkPropiedades)
+        }
+
+      }
+      marked.marked(data, { renderer })
+      resolve(arrayLinks)
     })
-  })
+    })
 }
 // leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md').then(res=> console.log('la data es::::', res))
 
 // console.log('ver sin en then: ', leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md'))
 
-function leerTodosArchivos (arrayMds) {
+function leerTodosArchivos(arrayMds) {
   let arrPromesas = []
-  arrPromesas = arrayMds.map((archivoMD)=>{
-      return leerArchivo(archivoMD)
+  arrPromesas = arrayMds.map((archivoMD) => {
+    return leerArchivo(archivoMD)
   })
 
-  return Promise.all(arrPromesas).then(res=>res)
+  return Promise.all(arrPromesas).then(res => res)
 }
-leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response=>console.log('veeeeer: ', response))
+leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
 
 
 
-  // fs.readFile(arrayMds, "utf8",
-  //   (err, data) => {
-  //     if (err) {
-  //       console.error(err);
-  //       return;
-  //     }
-  //     // console.log(data);
-  //   }
-  // );
-
-
-// console.log("Probando", existePath(ruta));
