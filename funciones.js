@@ -78,7 +78,7 @@ function leerArchivo(archivoMD) {
       if (err) {
         resolve(err);
       }
-      
+
       // Extraer links 
 
       const renderer = new marked.Renderer()
@@ -97,21 +97,64 @@ function leerArchivo(archivoMD) {
       marked.marked(data, { renderer })
       resolve(arrayLinks)
     })
-    })
+    // axios.get(arrayLinks.href)
+    //   .then((response) => {
+    //     arrayLinks.status = response.status
+    //     arrayLinks.ok = response.statusText
+    //     resolve(arrayLinks)
+    //   })
+    //   .catch((error) => {
+    //     if (error.response) {
+    //       arrayLinks.status = error.response.status
+    //     }
+    //     else {
+    //       arrayLinks.status = 'Sin respuesta del servidor'
+    //     }
+    //     arrayLinks.ok = 'fail'
+    //     resolve(arrayLinks)
+    //   })
+  })
+
+
 }
+
 // leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md').then(res=> console.log('la data es::::', res))
 
 // console.log('ver sin en then: ', leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md'))
+// function evaluarLink(arrayLinks) {
+//   return new Promise((resolve, reject) => {
 
+//     axios.get(arrayLinks.href)
+//       .then((response) => {
+//         arrayLinks.status = response.status
+//         arrayLinks.ok = response.statusText
+//         resolve(arrayLinks)
+//       })
+//       .catch((error) => {
+//         if (error.response) {
+//           links.status = error.response.status
+//         }
+//         else {
+//           links.status = 'Sin respuesta del servidor'
+//         }
+//         links.ok = 'fail'
+//         resolve(links)
+//       })
+//   })
+// }
+// console.log(evaluarLink(links))
 function leerTodosArchivos(arrayMds) {
   let arrPromesas = []
   arrPromesas = arrayMds.map((archivoMD) => {
     return leerArchivo(archivoMD)
   })
 
-  return Promise.all(arrPromesas).then(res => res)
+  return Promise.all(arrPromesas).then(res => res.flat(
+    
+  ))
 }
-leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
 
+// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
+// Evaluando Links
 
-
+module.exports = {rutAbsoluta, buscarRutasMds, leerTodosArchivos}
