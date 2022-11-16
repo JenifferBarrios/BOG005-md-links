@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const marked = require('marked');
 const axios = require('axios');
-const { CLIENT_RENEG_LIMIT } = require('tls');
+
 // const resolve = require('resolve')
 
 const ruta = process.argv[2]; //módulo que permite capturar argumentos a través de la línea de comandos y se guarda como un array.
@@ -98,7 +98,7 @@ function leerArchivo(archivoMD) {
       marked.marked(data, { renderer })
       resolve(arrayLinks)
     })
-    //
+
   })
 
 
@@ -119,45 +119,30 @@ function leerTodosArchivos(arrayMds) {
 const propiedadesLinks = leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
 // Evaluando Links
 
-function validarLink(propiedadesLinks) {
-  return new Promise((resolve, reject) => {
-    //  axios.get(propiedadesLinks.href).then((response) => {
-    const arrValidate = propiedadesLinks.map((link) => axios.get(propiedadesLinks)) 
-    .then((res) => {
-      resolve({
-        status: res.status,
-        ok: 'OK',
+function validarLink(arrayObjetos) {
+  let arrPromesas = [];
+  arrPromesas = arrayObjetos.map((objeto) => {
+    return axios
+      .get(objeto.href)
+      .then((res) => {
+        console.log("AXIOSSSSSSS", res.status);
+        objeto.status = res.status;
+        objeto.mensaje = "ok";
+        return objeto;
+      })
+      .catch((err) => {
+        objeto.status = 404;
+        objeto.mensaje = "Fail";
+        return objeto;
       });
-    })
-    .catch((error) => {
-      resolve({
-        status: null,
-        ok: '❌',
-      });
-    })
-    })
-      
-  
+  });
 
-  //nuevo intento
-
-  //   propiedadesLinks.status = response.status
-  //   propiedadesLinks.ok = response.statusText
-  //   resolve(propiedadesLinks)
-  //   console.log('hola', axios.getpropiedadesLinks.href))
-  // })
-  // .catch((error) => {
-  //   if (error) {
-  //     propiedadesLinks.status = error.status
-  //   }
-  //   else {
-  //     propiedadesLinks.status = 'Sin respuesta del servidor'
-  //   }
-  //   propiedadesLinks.ok = 'fail'
-  //   resolve(propiedadesLinks)
-  // })
-  // })
-
+  return Promise.all(arrPromesas).then(res => res)
 }
-validarLink(propiedadesLinks).then(response => console.log('mirando2op: ', response));
-module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos }
+//  validarLink(Links).then(res=>console.log(res))
+
+leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+  .then(resAll => validarLink(resAll))
+  .then(res => console.log('soy yo: ', res))
+
+module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos, validarLink }

@@ -7,8 +7,20 @@ function mdLinks(pathUser, options = { validate: false }) {
     return new Promise((resolve, reject) => {
         const pathAbsolute = rutAbsoluta(pathUser)
         const arrayMds = buscarRutasMds(pathAbsolute)
-        leerTodosArchivos(arrayMds).then(res=>resolve(res))
-    })
-}
+        if(options.validate == true) {
+            leerTodosArchivos(arrayMds).then(res=>resolve(res))
+        }else{
+            leerTodosArchivos(arrayMds)
+            .then(response=> validarHttp(response))
+            .then(resp => resolver(resp))
+        }
 
-mdLinks(ruta).then(res => console.log('resulltado de res en md-links: ', res))
+        })
+        
+        
+
+    }
+
+
+
+mdLinks(ruta).then(res => console.log('resulltado de res en md-links: ', res)).catch(err=>console.log(err))
