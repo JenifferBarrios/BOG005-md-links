@@ -7,7 +7,7 @@ function mdLinks(pathUser, options = { validate: false }) {
     return new Promise((resolve, reject) => {
         const pathAbsolute = rutAbsoluta(pathUser)
         const arrayMds = buscarRutasMds(pathAbsolute)
-         leerTodosArchivos(arrayMds).then(res=>resolve(res))
+        leerTodosArchivos(arrayMds).then(res=>resolve(res))
     })
 }
 

@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const marked = require('marked');
 const axios = require('axios');
+const { CLIENT_RENEG_LIMIT } = require('tls');
 // const resolve = require('resolve')
 
 const ruta = process.argv[2]; //módulo que permite capturar argumentos a través de la línea de comandos y se guarda como un array.
@@ -97,52 +98,13 @@ function leerArchivo(archivoMD) {
       marked.marked(data, { renderer })
       resolve(arrayLinks)
     })
-    // axios.get(arrayLinks.href)
-    //   .then((response) => {
-    //     arrayLinks.status = response.status
-    //     arrayLinks.ok = response.statusText
-    //     resolve(arrayLinks)
-    //   })
-    //   .catch((error) => {
-    //     if (error.response) {
-    //       arrayLinks.status = error.response.status
-    //     }
-    //     else {
-    //       arrayLinks.status = 'Sin respuesta del servidor'
-    //     }
-    //     arrayLinks.ok = 'fail'
-    //     resolve(arrayLinks)
-    //   })
+    //
   })
 
 
 }
 
-// leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md').then(res=> console.log('la data es::::', res))
 
-// console.log('ver sin en then: ', leerArchivo('C:\\Users\\LABORATORIA\\Desktop\\Proyectos\\Proyecto 4\\BOG005-md-links\\prueba\\file.md'))
-// function evaluarLink(arrayLinks) {
-//   return new Promise((resolve, reject) => {
-
-//     axios.get(arrayLinks.href)
-//       .then((response) => {
-//         arrayLinks.status = response.status
-//         arrayLinks.ok = response.statusText
-//         resolve(arrayLinks)
-//       })
-//       .catch((error) => {
-//         if (error.response) {
-//           links.status = error.response.status
-//         }
-//         else {
-//           links.status = 'Sin respuesta del servidor'
-//         }
-//         links.ok = 'fail'
-//         resolve(links)
-//       })
-//   })
-// }
-// console.log(evaluarLink(links))
 function leerTodosArchivos(arrayMds) {
   let arrPromesas = []
   arrPromesas = arrayMds.map((archivoMD) => {
@@ -150,11 +112,52 @@ function leerTodosArchivos(arrayMds) {
   })
 
   return Promise.all(arrPromesas).then(res => res.flat(
-    
+
   ))
 }
 
-// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
+const propiedadesLinks = leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
 // Evaluando Links
 
-module.exports = {rutAbsoluta, buscarRutasMds, leerTodosArchivos}
+function validarLink(propiedadesLinks) {
+  return new Promise((resolve, reject) => {
+    //  axios.get(propiedadesLinks.href).then((response) => {
+    const arrValidate = propiedadesLinks.map((link) => axios.get(propiedadesLinks)) 
+    .then((res) => {
+      resolve({
+        status: res.status,
+        ok: 'OK',
+      });
+    })
+    .catch((error) => {
+      resolve({
+        status: null,
+        ok: '❌',
+      });
+    })
+    })
+      
+  
+
+  //nuevo intento
+
+  //   propiedadesLinks.status = response.status
+  //   propiedadesLinks.ok = response.statusText
+  //   resolve(propiedadesLinks)
+  //   console.log('hola', axios.getpropiedadesLinks.href))
+  // })
+  // .catch((error) => {
+  //   if (error) {
+  //     propiedadesLinks.status = error.status
+  //   }
+  //   else {
+  //     propiedadesLinks.status = 'Sin respuesta del servidor'
+  //   }
+  //   propiedadesLinks.ok = 'fail'
+  //   resolve(propiedadesLinks)
+  // })
+  // })
+
+}
+validarLink(propiedadesLinks).then(response => console.log('mirando2op: ', response));
+module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos }
