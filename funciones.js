@@ -17,7 +17,7 @@ function existePath(path) {
 
     return true;
   } else {
-    console.error("La ruta no existe");
+    // console.error("La ruta no existe");
   }
 }
 
@@ -39,7 +39,7 @@ const buscarRutasMds = (ruta) => {
   if (fs.statSync(ruta).isFile() && path.extname(ruta) === ".md") {
     arrayMds.push(ruta);
   } else if (fs.statSync(ruta).isFile() && path.extname(ruta) !== ".md") {
-    console.log("este no es un archivo md");
+    // console.log("este no es un archivo md");
   } else {
     const elementos = fs.readdirSync(ruta);
     let subelemtos = [];
@@ -116,7 +116,6 @@ function leerTodosArchivos(arrayMds) {
   ))
 }
 
-const propiedadesLinks = leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta))).then(response => console.log('veeeeer: ', response));
 // Evaluando Links
 
 function validarLink(arrayObjetos) {
@@ -125,7 +124,7 @@ function validarLink(arrayObjetos) {
     return axios
       .get(objeto.href)
       .then((res) => {
-        console.log("AXIOSSSSSSS", res.status);
+        // console.log("AXIOSSSSSSS", res.status);
         objeto.status = res.status;
         objeto.mensaje = "ok";
         return objeto;

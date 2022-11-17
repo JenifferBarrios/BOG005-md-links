@@ -1,26 +1,22 @@
-const { buscarRutasMds, rutAbsoluta, leerTodosArchivos } = require('./funciones.js');
+const { buscarRutasMds, rutAbsoluta, leerTodosArchivos, validarLink } = require('./funciones.js');
 
 const ruta = process.argv[2]; //módulo que permite capturar argumentos a través de la línea de comandos y se guarda como un array.
 
 
 function mdLinks(pathUser, options = { validate: false }) {
     return new Promise((resolve, reject) => {
-        const pathAbsolute = rutAbsoluta(pathUser)
+        const pathAbsolute = rutAbsoluta(pathUser) //se llaman con constante por que son sincronas
         const arrayMds = buscarRutasMds(pathAbsolute)
-        if(options.validate == true) {
-            leerTodosArchivos(arrayMds).then(res=>resolve(res))
-        }else{
+        if (options.validate == true) {
             leerTodosArchivos(arrayMds)
-            .then(response=> validarHttp(response))
-            .then(resp => resolver(resp))
+                .then((res) => validarLink(res))
+                .then((res) => resolve(res)); // asincrornas
+            
+        } else {
+        leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+        .then((res) => resolve(res));
         }
+    })
+}
 
-        })
-        
-        
-
-    }
-
-
-
-mdLinks(ruta).then(res => console.log('resulltado de res en md-links: ', res)).catch(err=>console.log(err))
+mdLinks(ruta, options = { validate: false }).then(res => (res)).catch(err => (err))
