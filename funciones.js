@@ -89,19 +89,15 @@ function leerArchivo(archivoMD) {
           'text': text.split('').slice(0, 50).join(''),
           'file': archivoMD
         }
-
         if (linkPropiedades.href.includes('http')) {
           arrayLinks.push(linkPropiedades)
         }
-
       }
       marked.marked(data, { renderer })
       resolve(arrayLinks)
     })
 
   })
-
-
 }
 
 
@@ -110,9 +106,7 @@ function leerTodosArchivos(arrayMds) {
   arrPromesas = arrayMds.map((archivoMD) => {
     return leerArchivo(archivoMD)
   })
-
   return Promise.all(arrPromesas).then(res => res.flat(
-
   ))
 }
 
@@ -138,10 +132,12 @@ function validarLink(arrayObjetos) {
 
   return Promise.all(arrPromesas).then(res => res)
 }
+
+
 //  validarLink(Links).then(res=>console.log(res))
 
-leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
-  .then(resAll => validarLink(resAll))
-  .then(res => console.log('soy yo: ', res))
+// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+//   .then(resAll => validarLink(resAll))
+//   .then(res => console.log('soy yo: ', res))
 
 module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos, validarLink }

@@ -20,3 +20,17 @@ function mdLinks(pathUser, options = { validate: false }) {
 }
 
 mdLinks(ruta, options = { validate: false }).then(res => (res)).catch(err => (err))
+module.exports = {mdLinks}
+//Estadisticas Links
+const totalLink=(arrProp)=>{
+    return {
+      'Total': arrProp.length,
+      'unique': new Set(arrProp.map((arrayobjetos)=>arrayobjetos.href)).size
+    }
+  }
+
+mdLinks(ruta, (options = { validate: false }))
+  .then((res) => totalLink(res))
+  .then(res=>console.log('estado  del link',res))
+  .catch((err) => err);
+

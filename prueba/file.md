@@ -6,5 +6,5 @@ Dentro de una comunidad de código abierto, nos han propuesto crear una herramie
 https://curriculum.laboratoria.la/es/topics/javascript/04-arrays
 
 Podemos consultar este block https://majoledesm.github.io/apuntes/ para obtener mayor informacion al respecto.
-
+ https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Regular_Expressions
 
