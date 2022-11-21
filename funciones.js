@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const marked = require('marked');
 const axios = require('axios');
+const { CLIENT_RENEG_LIMIT } = require('tls');
 
 // const resolve = require('resolve')
 
@@ -132,9 +133,8 @@ function validarLink(arrayObjetos) {
 
   return Promise.all(arrPromesas).then(res => res)
 }
-leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
-  .then(resAll => validarLink(resAll))
-  .then(res => console.log('soy yo: ', res))
+// 
+
 
 
 //Estadisticas Links
@@ -154,16 +154,16 @@ const estadoLink = (arrProp) => {
   };
 };
 
-leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
-    .then((resAll) => {
-      validarLink(resAll).then((response)=>{
-        totalLink(response)
-        console.log(totalLink(response),175);
-        estadoLink(response)
-        console.table(estadoLink(response))
-      })
-      // console.log(validarLink(resAll), 174);
-    })
+// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+//     .then((resAll) => {
+//       validarLink(resAll).then((response)=>{
+//         totalLink(response)
+//         console.log(totalLink(response),175);
+//         estadoLink(response)
+//         console.table(estadoLink(response))
+//       })
+//       // console.log(validarLink(resAll), 174);
+//     })
 
 
 
