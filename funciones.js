@@ -132,12 +132,39 @@ function validarLink(arrayObjetos) {
 
   return Promise.all(arrPromesas).then(res => res)
 }
+leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+  .then(resAll => validarLink(resAll))
+  .then(res => console.log('soy yo: ', res))
 
 
-//  validarLink(Links).then(res=>console.log(res))
+//Estadisticas Links
+const totalLink = (arrProp) => {
+  return {
+    'Total': arrProp.length,
+    'unique': new Set(arrProp.map((arrayobjetos) => arrayobjetos.href)).size,
+  }
+}
 
-// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
-//   .then(resAll => validarLink(resAll))
-//   .then(res => console.log('soy yo: ', res))
+const estadoLink = (arrProp) => {
+  const linkRto = arrProp.filter((link) => link.status == 404).length;
+  return {
+    Total: arrProp.length,
+    unique: new Set(arrProp.map((arrayObjetos) => arrayObjetos.href)).size,
+    Broquen: linkRto,
+  };
+};
 
-module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos, validarLink }
+leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
+    .then((resAll) => {
+      validarLink(resAll).then((response)=>{
+        totalLink(response)
+        console.log(totalLink(response),175);
+        estadoLink(response)
+        console.table(estadoLink(response))
+      })
+      // console.log(validarLink(resAll), 174);
+    })
+
+
+
+module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos, validarLink,estadoLink,totalLink }

@@ -1,16 +1,22 @@
 const {mdLinks} = require('./index.js');
 const {validarLink} = require('./funciones.js');
-const ruta = process.argv[2]
-const args = process.argv
+const ruta = process.argv[2];
+const args = process.argv;
+const {estadoLink} = require('./funciones.js')
+const {totalLink} = require('./funciones.js')
 
-fs.stat( path, options, callback ) //sintaxis
-const cli = (ruta,)
-fs.stat("example_file.txt", (error, stats) => {
-    if (error) {
-      console.log(error);
-    }
-    else {
-      console.log("Stats object for: example_file.txt");
-      console.log(stats);
-    
+const cli = () => {
+  if (ruta === undefined){
+    console.log("Ingresa una ruta")
+  }else if(args.includes(--validate)){
+
+  }
   
+  else if(args.includes('--stats') && argv.includes('--validate')){
+    (mdLinks(filePath, {validate:true}).then((res) => {console.log(statsAndValidateLinks(res))})))
+
+  
+  mdLinks(ruta,options = { validate: true })
+  
+}
+}
