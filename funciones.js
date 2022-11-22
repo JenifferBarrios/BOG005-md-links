@@ -33,7 +33,7 @@ const rutAbsoluta = (mypath) => {
   const convRuta = mypath;
   return convRuta;
 }
-// console.log(rutAbsoluta(ruta));
+
 // Buscando archivos .md
 const buscarRutasMds = (ruta) => {
   let arrayMds = [];
@@ -133,9 +133,6 @@ function validarLink(arrayObjetos) {
 
   return Promise.all(arrPromesas).then(res => res)
 }
-// 
-
-
 
 //Estadisticas Links
 const totalLink = (arrProp) => {
@@ -153,18 +150,6 @@ const estadoLink = (arrProp) => {
     Broquen: linkRto,
   };
 };
-
-// leerTodosArchivos(buscarRutasMds(rutAbsoluta(ruta)))
-//     .then((resAll) => {
-//       validarLink(resAll).then((response)=>{
-//         totalLink(response)
-//         console.log(totalLink(response),175);
-//         estadoLink(response)
-//         console.table(estadoLink(response))
-//       })
-//       // console.log(validarLink(resAll), 174);
-//     })
-
 
 
 module.exports = { rutAbsoluta, buscarRutasMds, leerTodosArchivos, validarLink,estadoLink,totalLink }

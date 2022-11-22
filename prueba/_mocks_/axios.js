@@ -8,4 +8,4 @@ axios.get = jest.fn(() => new Promise((resolve, reject) => {
     })
 }));
 
-module.exports = axios;
+module.exports = {axios}
